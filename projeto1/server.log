@@ -1,0 +1,62 @@
+DEBUG:root:here
+DEBUG:root:sending {'maq3': [], 'maq1': [], 'maq2': []} to backend
+DEBUG:root:received {'maq3': [], 'maq1': [], 'maq2': []} to process
+DEBUG:root:here
+DEBUG:root:sending {'maq2': [finger: , uptime: ], 'maq1': [ps: ], 'maq3': [df: ]} to backend
+DEBUG:root:received {'maq2': [finger: , uptime: ], 'maq1': [ps: ], 'maq3': [df: ]} to process
+INFO:root:sending finger:  to ('localhost', 5001)
+DEBUG:root:here
+DEBUG:root:sending {'maq1': [ps: ], 'maq2': [finger: , uptime: ], 'maq3': [df: ]} to backend
+DEBUG:root:received {'maq1': [ps: ], 'maq2': [finger: , uptime: ], 'maq3': [df: ]} to process
+INFO:root:sending ps:  to ('localhost', 5000)
+DEBUG:root:here
+DEBUG:root:sending {'maq2': [finger: , uptime: ], 'maq1': [ps: ], 'maq3': [df: ]} to backend
+DEBUG:root:received {'maq2': [finger: , uptime: ], 'maq1': [ps: ], 'maq3': [df: ]} to process
+DEBUG:root:here
+DEBUG:root:sending {'maq1': [ps: ], 'maq3': [df: ], 'maq2': [finger: , uptime: ]} to backend
+DEBUG:root:received {'maq1': [ps: ], 'maq3': [df: ], 'maq2': [finger: , uptime: ]} to process
+INFO:root:sending ps:  to ('localhost', 5000)
+INFO:root:sending df:  to ('localhost', 5002)
+DEBUG:root:here
+DEBUG:root:sending {'maq1': [ps: ], 'maq3': [df: ], 'maq2': [finger: , uptime: ]} to backend
+DEBUG:root:received {'maq1': [ps: ], 'maq3': [df: ], 'maq2': [finger: , uptime: ]} to process
+INFO:root:sending ps:  to ('localhost', 5000)
+INFO:root:sending df:  to ('localhost', 5002)
+DEBUG:root:here
+DEBUG:root:sending {'maq3': [finger: ], 'maq2': [df: ], 'maq1': [df: ]} to backend
+DEBUG:root:received {'maq3': [finger: ], 'maq2': [df: ], 'maq1': [df: ]} to process
+INFO:root:sending finger:  to ('localhost', 5002)
+DEBUG:root:here
+DEBUG:root:sending {'maq2': [df: ], 'maq3': [finger: ], 'maq1': [df: ]} to backend
+DEBUG:root:received {'maq2': [df: ], 'maq3': [finger: ], 'maq1': [df: ]} to process
+INFO:root:sending df:  to ('localhost', 5001)
+INFO:root:sending finger:  to ('localhost', 5002)
+INFO:root:sending df:  to ('localhost', 5000)
+DEBUG:root:here
+DEBUG:root:sending {'maq2': [df: ], 'maq3': [finger: ], 'maq1': [df: ]} to backend
+DEBUG:root:received {'maq2': [df: ], 'maq3': [finger: ], 'maq1': [df: ]} to process
+INFO:root:sending df:  to ('localhost', 5001)
+INFO:root:sending finger:  to ('localhost', 5002)
+INFO:root:sending df:  to ('localhost', 5000)
+DEBUG:root:here
+DEBUG:root:sending {'maq2': [df: ], 'maq3': [finger: ], 'maq1': [df: ]} to backend
+DEBUG:root:received {'maq2': [df: ], 'maq3': [finger: ], 'maq1': [df: ]} to process
+INFO:root:sending df:  to ('localhost', 5001)
+INFO:root:sending finger:  to ('localhost', 5002)
+INFO:root:sending df:  to ('localhost', 5000)
+DEBUG:root:here
+DEBUG:root:sending {'maq2': [df: ], 'maq1': [df: ], 'maq3': [finger: ]} to backend
+DEBUG:root:received {'maq2': [df: ], 'maq1': [df: ], 'maq3': [finger: ]} to process
+INFO:root:sending df:  to ('localhost', 5001)
+INFO:root:sending df:  to ('localhost', 5000)
+INFO:root:sending finger:  to ('localhost', 5002)
+DEBUG:root:here
+DEBUG:root:sending {'maq1': [df: ], 'maq2': [df: ], 'maq3': [finger: ]} to backend
+DEBUG:root:received {'maq1': [df: ], 'maq2': [df: ], 'maq3': [finger: ]} to process
+INFO:root:sending df:  to ('localhost', 5000)
+INFO:root:sending df:  to ('localhost', 5001)
+INFO:root:sending finger:  to ('localhost', 5002)
+DEBUG:root:here
+DEBUG:root:sending {'maq3': [], 'maq1': [], 'maq2': [df: ]} to backend
+DEBUG:root:received {'maq3': [], 'maq1': [], 'maq2': [df: ]} to process
+INFO:root:sending df:  to ('localhost', 5001)
