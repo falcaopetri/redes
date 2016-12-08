@@ -15,6 +15,10 @@ sudo rm -f /usr/lib/cgi-bin/webserver.py
 sudo ln -s $BASEDIR/server/webserver.py /usr/lib/cgi-bin/webserver.py
 sudo ln -s $BASEDIR/server/templates /var/www/html
 
+
+sudo ln -s $BASEDIR/protocol.py $BASEDIR/server/protocol.py
+sudo ln -s $BASEDIR/protocol.py $BASEDIR/slave/protocol.py
+
 # Para que o Apache siga corretamente o symlink,
 # o owner do webserver.py deve ser igual ao owner
 # do Apache
