@@ -4,6 +4,7 @@ import cgitb	# displays nice tracebacks when errors occurs
 import logging
 
 import backend
+import protocol
 
 cgitb.enable()
 logging.basicConfig(filename='/tmp/server.log', level=logging.DEBUG)
@@ -17,10 +18,10 @@ class Command:
 		if params is None:
 			params = ""
 
-		self.params = params
+		self.params = str(params)
 
 	def __repr__(self):
-		return self.cmd + ": " + self.params
+		return self.cmd + " " + self.params
 
 
 def getCommands(form, id):
@@ -28,7 +29,6 @@ def getCommands(form, id):
 	return [ Command(cmd, form.getvalue(id + "_" + cmd)) for cmd in cmds ]
 
 
-logging.debug('here')
 machine_ids = [ "maq" + str(i) for i in range(1, 4) ]
 commands = {}
 for id in machine_ids:

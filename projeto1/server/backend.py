@@ -1,6 +1,7 @@
 import socket
 import logging
 
+import protocol
 
 def get_machine(maq_id):
 	#TODO add config file to describe port number, and hostname
@@ -9,12 +10,24 @@ def get_machine(maq_id):
 
 
 def send_command(maq, cmd):
-	skt = socket.socket()
-	skt.connect(get_machine(maq))
+	with socket.socket() as skt:
+		skt.settimeout(3)
 
-	logging.info("sending " + str(cmd) + " to " + str(get_machine(maq)))
-	skt.send(cmd.cmd.encode())
-	return skt.recv(1024).decode()
+		skt.connect(get_machine(maq))
+		try:
+			msg = cmd.cmd #+ " " + cmd.params
+			logging.debug("sending " + msg + " to " + str(get_machine(maq)))
+			logging.debug("calling encode")
+			# encoded_msg = protocol.encode_request(cmd.cmd, cmd.params, None, None)
+			encoded_msg = msg.encode()
+			logging.debug("sending encoded msg: " + str(encoded_msg))
+			skt.send(encoded_msg)
+	
+			return skt.recv(1024).decode()
+		except socket.timeout as exp:
+			return "timeout"
+		except:
+			return "could not connect"
 
 
 def process(maqs_cmds):
