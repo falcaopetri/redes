@@ -6,7 +6,7 @@ import logging
 import backend
 
 cgitb.enable()
-logging.basicConfig(filename='/home/aluno/redes/projeto1/server.log', level=logging.DEBUG)
+logging.basicConfig(filename='/tmp/server.log', level=logging.DEBUG)
 
 form = cgi.FieldStorage()
 
