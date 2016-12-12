@@ -62,6 +62,9 @@ def encode_request(cmd, param, src, dest):
 
 
 def decode_request(b):
+    return str(binascii.hexlify(b))
+    # TODO implement
+"""
     version = '0010'
     ihl = '0101'
     tos = '00000000'
@@ -98,3 +101,5 @@ def decode_request(b):
     b.append(version + ihl + tos + tl_final + ident + flags + fargoff + ttl + protocol + crc + srcadd + destadd + options)
 
     return b.tobytes()
+
+"""
