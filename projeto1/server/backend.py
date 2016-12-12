@@ -15,14 +15,20 @@ def send_command(maq, cmd):
 
 		skt.connect(get_machine(maq))
 		try:
-			msg = cmd.cmd #+ " " + cmd.params
+			msg = cmd.cmd + " " + cmd.params
+
 			logging.debug("sending " + msg + " to " + str(get_machine(maq)))
 			logging.debug("calling encode")
-			# encoded_msg = protocol.encode_request(cmd.cmd, cmd.params, None, None)
-			encoded_msg = msg.encode()
-			logging.debug("sending encoded msg: " + str(encoded_msg))
+
+			encoded_msg = protocol.encode_request(cmd.cmd, cmd.params, None, None)
+			# encoded_msg = msg.encode()
+
+			logging.debug("sending encoded msg: " + str(encoded_msg) + str(type(encoded_msg)))
+
 			skt.send(encoded_msg)
-	
+
+			logging.debug("sent")
+
 			return skt.recv(1024).decode()
 		except socket.timeout as exp:
 			return "timeout"

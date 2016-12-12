@@ -4,7 +4,7 @@ import socket
 import threading
 import logging
 import subprocess
-# import protocol
+import protocol
  
 class Command():
 	def validate(cmd):
@@ -26,22 +26,26 @@ class Command():
 	def execute(cmd):
 		# Shell True é necessário considerando que cmd é uma sng unica
 		# e não uma lista de prâmetr
-		process = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
-		stdout = str(process.stdout)
+		try:
+			#process = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
+			process = None
+		finally:
+			if process and process.stdout:
+				stdout = process.stdout
+			else:
+				stdout = 'qwer'
 
 		return stdout
 
 
-	def try_to_execute(encoded_data):
-		# decoded_data = protocol.decode(encoded_data)
-		decoded_data = str(encoded_data)
-		logging.debug("try_to_execute " + str(encoded_data))
-		if not Command.validate(decoded_data):
-			logging.debug("cmd " + decoded_data + " failed validation")
+	def try_to_execute(data):
+		logging.debug("try_to_execute " + str(data))
+		if not Command.validate(data):
+			logging.debug("cmd " + data + " failed validation")
 			return None
 		
-		logging.debug("executing " + decoded_data)
-		stdout = Command.execute(decoded_data)
+		logging.debug("executing " + data)
+		stdout = Command.execute(data)
 		logging.debug("stdout " + stdout)
 		return stdout
 
@@ -63,24 +67,29 @@ class ThreadedSocket:
 
 
 	def listenClient(conn, addr):
+		conn.settimeout(2)
 		while True:
 			try:
-				data = conn.recv(1024).decode()
-				logging.debug("received " + str(data))
-				if not data:
+				encoded_data = conn.recv(1024)
+				logging.debug("received " + str(encoded_data))
+				if not encoded_data:
 					logging.debug("data is None?!")
-					raise error("Client disconnected")
-
-				try:	
-					response = Command.try_to_execute(data)
-				
-					logging.debug("sending " + str(response.encode()))
-					conn.send(response.encode())
-					logging.debug("sent and closed connection to " + str(addr))
-				finally:
 					conn.close()
 					break
+					#raise error("Client disconnected")
+
+				logging.debug("decoding")
+				decoded_data = protocol.decode_request(encoded_data) 
+				logging.debug("decoded data: " + str(decoded_data))
+				response = Command.try_to_execute(decoded_data)
+				
+				logging.debug("sending " + str(response.encode()))
+				conn.send(response.encode())
+				logging.debug("sent and closed connection to " + str(addr))
+				conn.close()
+				break
 			except:
+				#conn.send("ops".encode())
 				conn.close()
 				break
 
@@ -92,6 +101,8 @@ class ThreadedSocket:
 			conn, addr = self.skt.accept()
 			conn.settimeout(3)
 			threading.Thread(target=ThreadedSocket.listenClient, args=(conn, addr)).start()
+			
+		self.skt.close()
 
 	
 
