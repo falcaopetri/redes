@@ -26,7 +26,7 @@ def encode_request(cmd, param, src, dest):
     tos = '00000000'
     ident = '0000000000000000'
     flags = '000'
-    fargoff = '000000000000'
+    fargoff = '0000000000000'
     ttl = '01010101'
 
     protocol = cmd_to_bin(cmd)    
