@@ -25,17 +25,26 @@ def cmd_to_bin(cmd):
 
     return m[cmd]
 
-
 def encode_request(cmd, param, src, dest):
+    encode_bin(cmd, param, src, dest, '000')
+
+def encode_answer(cmd, param, src, dest):
+    encode_bin(cmd, param, src, dest, '111')
+
+
+def encode_bin(cmd, param, src, dest, flag):
     b = bitarray()
 
     version = '0010'
     ihl = '0101'
     tos = '00000000'
     ident = '0000000000000000'
-    flags = '000'
+    flags = flag
     fargoff = '0000000000000'
     ttl = '01010101'
+    if(flags = '111'):
+        ttl = int(ttl, 2) - 1
+        ttl = bin(ttl)[2:].zfill(8)
 
     protocol = cmd_to_bin(cmd)    
 
@@ -61,7 +70,7 @@ def encode_request(cmd, param, src, dest):
     return b.tobytes()
 
 
-def decode_request(b):
+def decode_bin(b):
     bits = bitarray()
     bits.frombytes(b)
 
