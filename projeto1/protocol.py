@@ -43,20 +43,19 @@ def encode_request(cmd, param, src, dest):
     srcadd = '00000000000000000000000000000000' #TODO
     destadd = '00000000000000000000000000000001' #TODO
 
-    options = bin(int.from_bytes(param.encode(), 'big'))[2:]
+    options = ''
+    for c in param.encode():
+        options += bin(c)[2:].zfill(8)
+
     size = len(options)
 
     total_length_value = bin(32 * 5 + size)[2:]
     tlfinal = total_length_value.zfill(16)
 
-    to_append = [version, ihl, tos, tlfinal, ident, flags, fargoff, ttl, protocol, crc, srcadd, destadd]
+    to_append = [version, ihl, tos, tlfinal, ident, flags, fargoff, ttl, protocol, crc, srcadd, destadd, options]
 
     for string in to_append:
         b.extend(binstr_to_bools(string))
-
-    options = param
-    for c in options.encode():
-        b.extend(bin(c)[2:].zfill(8))
 
     return b.tobytes()
 
@@ -70,7 +69,6 @@ def decode_request(b):
     ihl = int(stringbits[4:8], 2)
     tos = stringbits[8:16]
     tlfinal = int(stringbits[16:32], 2)
-    #print("tlfinal", stringbits[16:32])
     ident = stringbits[32:48]
     flags = stringbits[48:51]
     fragoff = stringbits[51:64]
