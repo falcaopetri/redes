@@ -5,6 +5,7 @@ import threading
 import logging
 import subprocess
 import protocol
+import sys
 
 class Command():
 	def validate(cmd):
@@ -25,16 +26,17 @@ class Command():
 
 	def execute(cmd):
 		# Shell True é necessário considerando que cmeh uma string unica
-		# e não uma lista deparametros
+		# e não uma lista d eparametros
 		try:
 			process = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
-		finally:
-			if process and process.stdout:
-				stdout = process.stdout
-			else:
-				stdout = 'failed to execute process'
+			logging.debug("subprocess.run(%s)" % cmd)
+		except:
+			e = sys.exc_info()[0]
+			stdout = 'failed to execute process %s' % e
+		else:
+			stdout = process.stdout
 
-		return stdout
+		return str(stdout)
 
 
 	def try_to_execute(data):
