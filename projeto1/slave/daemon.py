@@ -24,16 +24,15 @@ class Command():
 
 
 	def execute(cmd):
-		# Shell True é necessário considerando que cmd é uma sng unica
-		# e não uma lista de prâmetr
+		# Shell True é necessário considerando que cmd é ustring unica
+		# e não uma lista de ar�metro
 		try:
-			#process = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
-			process = None
+			process = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
 		finally:
 			if process and process.stdout:
 				stdout = process.stdout
 			else:
-				stdout = 'qwer'
+				stdout = 'failed to execute process'
 
 		return stdout
 

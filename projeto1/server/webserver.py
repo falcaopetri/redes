@@ -37,10 +37,14 @@ for id in machine_ids:
 
 logging.debug('sending ' + str(commands) + ' to backend')
 response = backend.process(commands)
+logging.debug('received ' + str(response) + ' from backend')
 
 print("Content-Type: text/html;charset=utf-8\r\n\r\n")
+
 print(commands)
+
 print("</br>")
+
 
 def printDict(dictObj, indent):
 	# source stackoverflow.com/a/3930913
@@ -54,3 +58,5 @@ def printDict(dictObj, indent):
 	print(' '*indent + '</ul>\n')
 
 printDict(response, 2)
+
+logging.debug("end")

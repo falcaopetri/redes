@@ -1,5 +1,6 @@
 import socket
 import logging
+import sys
 
 import protocol
 
@@ -13,27 +14,29 @@ def send_command(maq, cmd):
 	with socket.socket() as skt:
 		skt.settimeout(3)
 
-		skt.connect(get_machine(maq))
 		try:
+			skt.connect(get_machine(maq))
 			msg = cmd.cmd + " " + cmd.params
 
 			logging.debug("sending " + msg + " to " + str(get_machine(maq)))
 			logging.debug("calling encode")
 
 			encoded_msg = protocol.encode_request(cmd.cmd, cmd.params, None, None)
-			# encoded_msg = msg.encode()
+			#encoded_msg = msg.encode()
 
 			logging.debug("sending encoded msg: " + str(encoded_msg) + str(type(encoded_msg)))
 
 			skt.send(encoded_msg)
 
 			logging.debug("sent")
-
 			return skt.recv(1024).decode()
 		except socket.timeout as exp:
+			logging.debug("connection timed out")
 			return "timeout"
 		except:
-			return "could not connect"
+			e = sys.exc_info()[0]
+			logging.debug("could not connect to " + str(get_machine(maq)) + str(e))
+			return "could not connect: %s" % str(e)
 
 
 def process(maqs_cmds):
@@ -45,5 +48,7 @@ def process(maqs_cmds):
 		
 		for cmd in cmds:
 			response[maq][cmd] = send_command(maq, cmd)
+			logging.debug(str(maq) + ", " + str(cmd) + ": " + str(response[maq][cmd]))
 	
+	logging.debug("returning response " + str(response))	
 	return response
