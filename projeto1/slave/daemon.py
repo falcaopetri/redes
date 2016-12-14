@@ -5,7 +5,7 @@ import threading
 import logging
 import subprocess
 import protocol
- 
+
 class Command():
 	def validate(cmd):
 		'''
@@ -24,8 +24,8 @@ class Command():
 
 
 	def execute(cmd):
-		# Shell True é necessário considerando que cmd é ustring unica
-		# e não uma lista de ar�metro
+		# Shell True é necessário considerando que cmeh uma string unica
+		# e não uma lista deparametros
 		try:
 			process = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
 		finally:

@@ -70,7 +70,7 @@ def decode_request(b):
     ihl = int(stringbits[4:8], 2)
     tos = stringbits[8:16]
     tlfinal = int(stringbits[16:32], 2)
-    //print("tlfinal", stringbits[16:32])
+    #print("tlfinal", stringbits[16:32])
     ident = stringbits[32:48]
     flags = stringbits[48:51]
     fragoff = stringbits[51:64]
