@@ -25,23 +25,49 @@ def cmd_to_bin(cmd):
 
     return m[cmd]
 
+def IP2Bin(ip):
+    o = list()
+    for i in ip.split('.'):
+        o.append(i)    
+    res = (256**3 * int(o[0])) + (256**2 * int(o[1])) + (256**1 * int(o[2])) + (256**0 * int(o[3]))
+    res = bin(res)[2:].zfill(32)
+    return res
+
+
+def Bin2IP(ipnum):
+    ipnum = int(ipnum, 2)
+    o1 = int(ipnum / 16777216) % 256
+    o2 = int(ipnum / 65536) % 256
+    o3 = int(ipnum / 256) % 256
+    o4 = int(ipnum) % 256
+    return '%(o1)s.%(o2)s.%(o3)s.%(o4)s' % locals()
 
 def encode_request(cmd, param, src, dest):
+    encode_bin(cmd, param, src, dest, '000')
+
+def encode_answer(cmd, param, src, dest):
+    encode_bin(cmd, param, src, dest, '111')
+
+
+def encode_bin(cmd, param, src, dest, flag):
     b = bitarray()
 
     version = '0010'
     ihl = '0101'
     tos = '00000000'
     ident = '0000000000000000'
-    flags = '000'
+    flags = flag
     fargoff = '0000000000000'
     ttl = '01010101'
+    if(flags = '111'):
+        ttl = int(ttl, 2) - 1
+        ttl = bin(ttl)[2:].zfill(8)
 
     protocol = cmd_to_bin(cmd)    
 
     crc = '0000000000000000' #TODO
-    srcadd = '00000000000000000000000000000000' #TODO
-    destadd = '00000000000000000000000000000001' #TODO
+    srcadd = IP2Bin(src) 
+    destadd = IP2Bin(dest) 
 
     options = ''
     for c in param.encode():
@@ -60,7 +86,7 @@ def encode_request(cmd, param, src, dest):
     return b.tobytes()
 
 
-def decode_request(b):
+def decode_bin(b):
     bits = bitarray()
     bits.frombytes(b)
 
@@ -85,9 +111,10 @@ def decode_request(b):
         cmd = 'uptime'
 
     crc = stringbits[80:96]
-    srcadd = stringbits[96:128] 
+    srcadd = stringbits[96:128]
+    src = Bin2IP(srcadd)
     destadd = stringbits[128:160]
-
+    dest = Bin2IP(destadd)
     options = stringbits[160:tlfinal+1]
 
     return cmd + " " + str_from_bits(options)
