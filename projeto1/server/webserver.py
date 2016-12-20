@@ -6,9 +6,13 @@ import subprocess
 
 import backend
 import protocol
+import util
+
+
+config = util.get_config()
 
 cgitb.enable()
-logging.basicConfig(filename='/tmp/server.log', level=logging.DEBUG)
+logging.basicConfig(filename=config['logging']['server'], level=logging.DEBUG)
 
 form = cgi.FieldStorage()
 
@@ -34,7 +38,7 @@ def getCommands(form, id):
 	return [ Command(cmd, form.getvalue(id + "_" + cmd)) for cmd in cmds ]
 
 
-machine_ids = [ "maq" + str(i) for i in range(1, 4) ]
+machine_ids = config['daemons'].keys()
 commands = {}
 for id in machine_ids:
 	commands[id] = getCommands(form, id)
@@ -45,10 +49,6 @@ response = backend.process(commands)
 logging.debug('received ' + str(response) + ' from backend')
 
 print("Content-Type: text/html;charset=utf-8\r\n\r\n")
-
-
-
-
 print("<body class=\"body_foreground body_background\" style=\"font-size: normal;\" >")
 
 print("</br>")

@@ -1,4 +1,6 @@
 *.pyc
 *.swp
-server/protocol.py
-slave/protocol.py
+*/protocol.py
+*/config.json
+*/util.py
+logs/

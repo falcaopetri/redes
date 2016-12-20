@@ -4,8 +4,13 @@ import socket
 import threading
 import logging
 import subprocess
-import protocol
 import sys
+
+import protocol
+import util
+
+
+config = util.get_config()
 
 class Command():
 	def validate(cmd):
@@ -28,15 +33,17 @@ class Command():
 		# Shell True é necessário considerando que cmeh uma string unica
 		# e não uma lista d eparametros
 		try:
-			process = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
+			process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 			logging.debug("subprocess.run(%s)" % cmd)
 		except:
 			e = sys.exc_info()[0]
 			stdout = 'failed to execute process %s' % e
 		else:
-			stdout = process.stdout
-
-		return stdout.decode()
+			if process.returncode == 0:
+				stdout = process.stdout.decode()
+			else:
+				stdout = process.stderr.decode()
+		return stdout
 
 
 	def try_to_execute(data):
@@ -46,7 +53,6 @@ class Command():
 		
 		logging.debug("executing " + data)
 		stdout = Command.execute(data)
-		logging.debug("stdout " + stdout)
 		return stdout
 
 
@@ -111,12 +117,12 @@ class ThreadedSocket:
 	
 
 if __name__ == "__main__":
-
+	
 	parser = argparse.ArgumentParser()
 	parser.add_argument("port", help="port on which to run the daemon", type=int)
 
 	args = parser.parse_args()
 
-	logging.basicConfig(filename='/tmp/daemon-' + str(args.port), level=logging.DEBUG)
+	logging.basicConfig(filename=config['logging']['daemon'] % str(args.port), level=logging.DEBUG)
 
 	ThreadedSocket(args).listen()

@@ -3,11 +3,15 @@ import logging
 import sys
 
 import protocol
+import util
+
+config = util.get_config()
 
 def get_machine(maq_id):
-	#TODO add config file to describe port number, and hostname
-	ports = { 'maq1': 5000, 'maq2': 5001, 'maq3': 5002 }
-	return ('localhost', ports[maq_id]) 
+	if maq_id not in config['daemons']:
+		raise NameError("%s not defined in config file" % maq_id)
+
+	return tuple(config['daemons'][maq_id])
 
 
 def send_command(maq, cmd):
@@ -52,7 +56,7 @@ def process(maqs_cmds):
 		
 		for cmd in cmds:
 			response[maq][cmd] = send_command(maq, cmd)[1]
-			logging.debug(str(maq) + ", " + str(cmd) + ": " + str(response[maq][cmd]))
+			logging.debug("%s, %s: %s" % (maq, cmd, response[maq][cmd]))
 	
 	logging.debug("returning response " + str(response))	
 	return response
