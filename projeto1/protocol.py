@@ -23,9 +23,12 @@ def cmd_to_bin(cmd):
             'uptime': '00001000'
     }
 
-    return m[cmd]
+    return m[cmd] if cmd in m else '00000000'
 
 def IP2Bin(ip):
+    if ip is None:
+        return "".zfill(32)
+
     o = list()
     for i in ip.split('.'):
         o.append(i)    
@@ -43,10 +46,10 @@ def Bin2IP(ipnum):
     return '%(o1)s.%(o2)s.%(o3)s.%(o4)s' % locals()
 
 def encode_request(cmd, param, src, dest):
-    encode_bin(cmd, param, src, dest, '000')
+    return encode_bin(cmd, param, src, dest, '000')
 
-def encode_answer(cmd, param, src, dest):
-    encode_bin(cmd, param, src, dest, '111')
+def encode_response(cmd, param, src, dest):
+    return encode_bin(cmd, param, src, dest, '111')
 
 
 def encode_bin(cmd, param, src, dest, flag):
@@ -59,7 +62,8 @@ def encode_bin(cmd, param, src, dest, flag):
     flags = flag
     fargoff = '0000000000000'
     ttl = '01010101'
-    if(flags = '111'):
+    if (flags == '111'):
+	# TODO prev_ttl deveria ser passado como parametro, e ttl deveria ser ttl=prev_ttl-1
         ttl = int(ttl, 2) - 1
         ttl = bin(ttl)[2:].zfill(8)
 
@@ -86,7 +90,7 @@ def encode_bin(cmd, param, src, dest, flag):
     return b.tobytes()
 
 
-def decode_bin(b):
+def decode(b):
     bits = bitarray()
     bits.frombytes(b)
 

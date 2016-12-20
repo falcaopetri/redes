@@ -80,12 +80,15 @@ class ThreadedSocket:
 					#raise error("Client disconnected")
 
 				logging.debug("decoding")
-				decoded_data = protocol.decode_request(encoded_data) 
+				decoded_data = protocol.decode(encoded_data) 
 				logging.debug("decoded data: " + str(decoded_data))
-				response = Command.try_to_execute(decoded_data)
-				
-				logging.debug("sending " + str(response.encode()))
-				conn.send(response.encode())
+				stdout = Command.try_to_execute(decoded_data)
+				# TODO passar src e dest IP's 
+				response = protocol.encode_response("", stdout, None, None)
+				logging.debug("encoded response: " + str(response))
+
+				logging.debug("sending " + str(response))
+				conn.send(response)
 				logging.debug("sent and closed connection to " + str(addr))
 				conn.close()
 				break

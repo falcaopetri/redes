@@ -21,21 +21,26 @@ def send_command(maq, cmd):
 			logging.debug("sending " + msg + " to " + str(get_machine(maq)))
 			logging.debug("calling encode")
 
-			encoded_msg = protocol.encode_request(cmd.cmd, cmd.params, None, None)
-			#encoded_msg = msg.encode()
+			encoded_request = protocol.encode_request(cmd.cmd, cmd.params, None, None)
+			#encoded_request = msg.encode()
 
-			logging.debug("sending encoded msg: " + str(encoded_msg) + str(type(encoded_msg)))
+			logging.debug("sending encoded msg: " + str(encoded_request) + str(type(encoded_request)))
 
-			skt.send(encoded_msg)
+			skt.send(encoded_request)
 
 			logging.debug("sent")
-			return skt.recv(1024).decode()
+			encoded_response = skt.recv(1024)
+			logging.debug("received encoded: %s" % encoded_response)
+			decoded_response = protocol.decode(encoded_response)
+			logging.debug("received decoded: %s" % decoded_response)
+
+			return decoded_response
 		except socket.timeout as exp:
 			logging.debug("connection timed out")
 			return "timeout"
 		except:
 			e = sys.exc_info()[0]
-			logging.debug("could not connect to " + str(get_machine(maq)) + str(e))
+			logging.debug("could not connect to %s %s" % (str(get_machine(maq)), e))
 			return "could not connect: %s" % str(e)
 
 

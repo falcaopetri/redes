@@ -2,6 +2,7 @@
 import cgi	# handling of user input in CGI scripts	
 import cgitb	# displays nice tracebacks when errors occurs
 import logging
+import subprocess
 
 import backend
 import protocol
@@ -41,10 +42,19 @@ logging.debug('received ' + str(response) + ' from backend')
 
 print("Content-Type: text/html;charset=utf-8\r\n\r\n")
 
-print(commands)
+
+print("<html>")
+print("<head>")
+stdout = subprocess.run("ansi2html -H", stdout=subprocess.PIPE, shell=True).stdout
+print(stdout.decode())
+#print("<\head>")
+print("")
+
+
+print("<body class=\"body_foreground body_background\" style=\"font-size: normal;\" >")
+#print(commands)
 
 print("</br>")
-
 
 def printDict(dictObj, indent):
 	# source stackoverflow.com/a/3930913
@@ -54,9 +64,16 @@ def printDict(dictObj, indent):
 			print('  '*indent, '<li>', k, ':', '</li>')
 			printDict(v, indent+1)
 		else:
-			print(' '*indent, '<li>', k, ':', v.replace('\\n', '</br>'), '</li>')
+			print("<pre class=\"ansi2html-content\">")
+			#print(' '*indent, '<li>', k, ':', v.replace('\\n', '</br>'), '</li>')
+			stdout = subprocess.run("echo \"%s\" | ansi2html"  % v, stdout=subprocess.PIPE, shell=True).stdout
+			print(stdout.decode())
+			print("<pre>")
 	print(' '*indent + '</ul>\n')
 
 printDict(response, 2)
 
+print("</body>")
+
+print("</html>")
 logging.debug("end")
