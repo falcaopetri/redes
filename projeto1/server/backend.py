@@ -22,7 +22,6 @@ def send_command(maq, cmd):
 			logging.debug("calling encode")
 
 			encoded_request = protocol.encode_request(cmd.cmd, cmd.params, None, None)
-			#encoded_request = msg.encode()
 
 			logging.debug("sending encoded msg: " + str(encoded_request) + str(type(encoded_request)))
 
@@ -30,9 +29,9 @@ def send_command(maq, cmd):
 
 			logging.debug("sent")
 			encoded_response = skt.recv(1024)
-			logging.debug("received encoded: %s" % encoded_response)
+			logging.debug("received encoded: ", encoded_response)
 			decoded_response = protocol.decode(encoded_response)
-			logging.debug("received decoded: %s" % decoded_response)
+			logging.debug("received decoded: ", decoded_response)
 
 			return decoded_response
 		except socket.timeout as exp:
@@ -52,7 +51,7 @@ def process(maqs_cmds):
 		response[maq] = {}
 		
 		for cmd in cmds:
-			response[maq][cmd] = send_command(maq, cmd)
+			response[maq][cmd] = send_command(maq, cmd)[1]
 			logging.debug(str(maq) + ", " + str(cmd) + ": " + str(response[maq][cmd]))
 	
 	logging.debug("returning response " + str(response))	

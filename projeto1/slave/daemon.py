@@ -36,14 +36,13 @@ class Command():
 		else:
 			stdout = process.stdout
 
-		return str(stdout)
+		return stdout.decode()
 
 
 	def try_to_execute(data):
 		logging.debug("try_to_execute " + str(data))
 		if not Command.validate(data):
-			logging.debug("cmd " + data + " failed validation")
-			return None
+			return "Invalid command: forbidden character found"
 		
 		logging.debug("executing " + data)
 		stdout = Command.execute(data)
@@ -82,8 +81,9 @@ class ThreadedSocket:
 				logging.debug("decoding")
 				decoded_data = protocol.decode(encoded_data) 
 				logging.debug("decoded data: " + str(decoded_data))
-				stdout = Command.try_to_execute(decoded_data)
+				stdout = Command.try_to_execute(" ".join(decoded_data))
 				# TODO passar src e dest IP's 
+				logging.debug("stdout: " + stdout)
 				response = protocol.encode_response("", stdout, None, None)
 				logging.debug("encoded response: " + str(response))
 

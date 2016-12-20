@@ -121,4 +121,4 @@ def decode(b):
     dest = Bin2IP(destadd)
     options = stringbits[160:tlfinal+1]
 
-    return cmd + " " + str_from_bits(options)
+    return (cmd, str_from_bits(options))

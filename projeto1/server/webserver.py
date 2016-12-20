@@ -24,6 +24,10 @@ class Command:
 	def __repr__(self):
 		return self.cmd + " " + self.params
 
+	def __lt__(self, other):
+		# enables sorting on list of Commands
+		# used to always display commands on the same order
+		return str(self) < str(other)
 
 def getCommands(form, id):
 	cmds = form.getlist(id)
@@ -43,36 +47,33 @@ logging.debug('received ' + str(response) + ' from backend')
 print("Content-Type: text/html;charset=utf-8\r\n\r\n")
 
 
-print("<html>")
-print("<head>")
-stdout = subprocess.run("ansi2html -H", stdout=subprocess.PIPE, shell=True).stdout
-print(stdout.decode())
-#print("<\head>")
-print("")
 
 
 print("<body class=\"body_foreground body_background\" style=\"font-size: normal;\" >")
-#print(commands)
 
 print("</br>")
 
 def printDict(dictObj, indent):
 	# source stackoverflow.com/a/3930913
 	print('  '*indent + '<ul>\n')
-	for k, v in dictObj.items():
+	itr = dictObj if isinstance(dictObj, list) else dictObj.items()
+	for k, v in itr:
 		if isinstance(v, dict):
 			print('  '*indent, '<li>', k, ':', '</li>')
+			v = sorted(v.items(), key=operator.itemgetter(0))
 			printDict(v, indent+1)
 		else:
 			print("<pre class=\"ansi2html-content\">")
-			#print(' '*indent, '<li>', k, ':', v.replace('\\n', '</br>'), '</li>')
-			stdout = subprocess.run("echo \"%s\" | ansi2html"  % v, stdout=subprocess.PIPE, shell=True).stdout
-			print(stdout.decode())
+			print(' '*indent, '<li>', k, ':', '</li>')
+			stdout = subprocess.run("echo \"%s\" | ansi2html -i"  % v, stdout=subprocess.PIPE, shell=True).stdout
+			stdout = stdout.decode()
+			print(stdout)
 			print("<pre>")
 	print(' '*indent + '</ul>\n')
 
+import operator
+response = sorted(response.items(), key=operator.itemgetter(0))
 printDict(response, 2)
-
 print("</body>")
 
 print("</html>")
