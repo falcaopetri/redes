@@ -33,9 +33,9 @@ def send_command(maq, cmd):
 
 			logging.debug("sent")
 			encoded_response = skt.recv(1024)
-			logging.debug("received encoded: ", encoded_response)
+			logging.debug("received encoded: %s" % encoded_response)
 			decoded_response = protocol.decode(encoded_response)
-			logging.debug("received decoded: ", decoded_response)
+			logging.debug("received decoded: %s" % str(decoded_response))
 
 			return decoded_response
 		except socket.timeout as exp:

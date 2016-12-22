@@ -123,6 +123,7 @@ def encode_bin(cmd, param, src, dest, flag):
     size = len(options)
 
     total_length_value = bin(32 * 5 + size)[2:]
+    logging.debug("total_length_value %d" % (32*5 + size))
     tlfinal = total_length_value.zfill(16)
 
     to_append = [version, ihl, tos, tlfinal, ident, flags, fargoff, ttl, protocol, crc, srcadd, destadd, options]
