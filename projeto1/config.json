@@ -1,0 +1,11 @@
+{
+	"daemons": {
+		"maq1": ["localhost", 5000],
+		"maq2": ["localhost", 5001],
+		"maq3": ["localhost", 5002]
+	},
+	"logging": {
+		"server": "./logs/server.log",
+		"daemon": "./logs/daemon-%s.log"
+	}
+}
