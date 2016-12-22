@@ -1,7 +1,6 @@
 import os
 import json
 
-
 def get_config():
 	'''
 	Retorna um dicionário com as configurações carregadas do arquivo de configuração.
@@ -10,7 +9,6 @@ def get_config():
 	'''
 	# TODO o path deveria estar hardcoded aqui?
 	# TODO o nome do arquivo deveria estar hardcoded ou ser um argumento?
-
 	os.chdir('/home/aluno/redes/projeto1')
 
 	with open('config.json', 'r') as f:

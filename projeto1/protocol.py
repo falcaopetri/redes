@@ -44,6 +44,14 @@ def str_from_bits(bits):
         chars.append(chr(int(''.join([str(bit) for bit in byte]), 2)))
     return ''.join(chars)
 
+def str_from_bits(bits):
+    # Source: http://stackoverflow.com/a/10238140
+    chars = []
+    for b in range(len(bits) // 8):
+        byte = bits[b*8:(b+1)*8]
+        chars.append(chr(int(''.join([str(bit) for bit in byte]), 2)))
+    return ''.join(chars)
+
 
 def cmd_to_bin(cmd):
     m = {
@@ -66,6 +74,13 @@ def IP2Bin(ip):
     res = bin(res)[2:].zfill(32)
     return res
 
+def Bin2IP(ipnum):
+    ipnum = int(ipnum, 2)
+    o1 = int(ipnum / 16777216) % 256
+    o2 = int(ipnum / 65536) % 256
+    o3 = int(ipnum / 256) % 256
+    o4 = int(ipnum) % 256
+    return '%(o1)s.%(o2)s.%(o3)s.%(o4)s' % locals()
 
 def Bin2IP(ipnum):
     ipnum = int(ipnum, 2)
@@ -126,9 +141,6 @@ def encode_bin(cmd, param, src, dest, flag):
     b = bitarray()
     for string in to_append:
         b.extend(binstr_to_bools(string))
-
-    #logging.debug("hex msg %s" %binascii.hexlify(b.tobytes()).decode())
-
 
     return b.tobytes()
 
