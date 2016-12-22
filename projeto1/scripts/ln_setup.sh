@@ -8,7 +8,7 @@
 # 	- html em /var/www para ser servido pelo Apache
 # 	- código do servidor em /usr/lib/cgi-bin para ser utilizado pelo Apache+CGI (configurado em /etc/apache2/conf-enabled/serve-cgi-bin.conf
 
-BASEDIR="/home/aluno/redes/projeto1"
+BASEDIR=$PROJETO1_PATH
 
 sudo rm -rf /var/www/html
 sudo rm -f /usr/lib/cgi-bin/webserver.py

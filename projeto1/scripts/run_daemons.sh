@@ -1,5 +1,5 @@
 # TODO subir daemons de acordo com o especificado em config.json
-BASEDIR="/home/aluno/redes/projeto1"
+BASEDIR=$PROJETO1_PATH
 
 # Kills all running daemons
 pkill -f daemon.py
