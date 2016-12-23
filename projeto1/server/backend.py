@@ -25,7 +25,8 @@ def send_command(maq, cmd):
 			logging.debug("sending " + msg + " to " + str(get_machine(maq)))
 			logging.debug("calling encode")
 
-			encoded_request = protocol.encode_request(cmd.cmd, cmd.params, None, None)
+			local_ip = socket.gethostbyname(socket.gethostname())
+			encoded_request = protocol.encode_request(cmd.cmd, cmd.params, local_ip, skt.getsockname()[0])
 
 			logging.debug("sending encoded msg: " + str(encoded_request) + str(type(encoded_request)))
 

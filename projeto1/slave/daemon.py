@@ -16,7 +16,7 @@ class Command():
 	def validate(cmd):
 		'''
 		A daemon deve fazer a checagem prévia destas opções antes de
-		executá-las, garantidon que parâmetros maliciosos como 
+		executá-las, garantido que parâmetros maliciosos como 
 		"|", ";" e ">" não sejam executados
 		'''
 		import re
@@ -30,16 +30,16 @@ class Command():
 
 
 	def execute(cmd):
-		# Shell True é necessário considerando que cmeh uma string unica
-		# e não uma lista d eparametros
+		# Shell True é necessário considerando que cmd é uma string unica
+		# e não uma lista de parametros
 		try:
-			process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 			logging.debug("subprocess.run(%s)" % cmd)
+			process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 		except:
 			e = sys.exc_info()[0]
 			stdout = 'failed to execute process %s' % e
 		else:
-			if process.returncode == 0:
+			if len(process.stdout):
 				stdout = process.stdout.decode()
 			else:
 				stdout = process.stderr.decode()
@@ -80,29 +80,22 @@ class ThreadedSocket:
 				logging.debug("received " + str(encoded_data))
 				if not encoded_data:
 					logging.debug("data is None?!")
-					conn.close()
-					break
-					#raise error("Client disconnected")
+					raise Exception("data is None?!")
 
 				logging.debug("decoding")
 				decoded_data = protocol.decode(encoded_data) 
 				logging.debug("decoded data: " + str(decoded_data))
-				stdout = Command.try_to_execute(" ".join(decoded_data))
-				# TODO passar src e dest IP's 
-				logging.debug("stdout: " + stdout)
-				response = protocol.encode_response("", stdout, None, None)
-				logging.debug("encoded response: " + str(response))
-
-				logging.debug("sending " + str(response))
-				conn.send(response)
+				response_msg = Command.try_to_execute(" ".join(decoded_data))
+				logging.debug("stdout: " + response_msg)
 			except AssertionError:
-				msg = "failed checksum while decoding request"
-				response = protocol.encode_response("", msg, None, None)
-				logging.debug(msg)
+				response_msg = "failed checksum while decoding request"
+				logging.debug(response_msg)
 			except:
 				e = sys.exc_info()[0]
-				response = protocol.encode_response("", str(e), None, None)
+				response_msg = str(e)
 			finally:
+				response = protocol.encode_response("", response_msg, conn.getsockname()[0], addr[0])
+				logging.debug("sending " + str(response))
 				conn.send(response)
 				conn.close()
 				logging.debug("sent and closed connection to " + str(addr))

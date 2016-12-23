@@ -4,6 +4,7 @@ import binascii
 
 def crc16(data):
     # Source: https://gist.github.com/oysstu/68072c44c02879a2abf94ef350d1c7c6
+    # Referência: http://www.drdobbs.com/implementing-the-ccitt-cyclical-redundan/199904926
     poly = 0x8408
     crc = 0xFFFF
     for byte in data:
