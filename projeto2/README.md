@@ -48,14 +48,20 @@
 
 <p>O desenvolvimento do lab3, mais uma vez se deu de maneira quase que sequencial ao lab2. Todo o processo utilizado no lab2 foi feito também para a topologia em questão, desde a modelagem da topologia para mininet até a inicialização dos roteadores com as configurações determinadas pelos arquivos Zebra e BGP. A única diferença em todo o processo até então é que como nesta topologia temos três roteadores a vizinhança se torno um pouco mais complexa entre eles, uma vez que um dos roteadores se encontra ligado aos dois demais. Por tanto, um dos arquivo BGPs (no caso o que representa o roteador de São Paulo) contém mais de um "vizinho".</p>
 <p>Porém uma parte adicional precisou ser desenvolvida para esse laboratório. Como havia a necessidade de atribuir IP's dinamicamente entre os links das sub-redes, precisavamos criar um DHCP Server para cada sub-rede, que seria responsável pelas requisições de IP das mesmas. Para isso foram criadas as configurações necessárias para definir o intervalo e a mascara de cada sub-rede e então inicializados todos os DHCP Servers.</p>
+<p>Foi necessário adicionar um delay de 7 segundos após o start dos DHCP Servers para que as requisições dos clientes fossem atendidas corretamente.</p>
 <p>O processo de modelagem da topologia pode ser visto no arquivo "lab3.py" disponível em: https://github.com/falcaopetri/redes/blob/master/projeto2/lab3/lab3.py</p>
 <p>O processo de configuração dos roteadores por Zebra e BGP (um arquivo de configuração de cada um dos tipos para cada roteador, totalizando seis arquivos no caso) pode ser visto no diretório "conf" disponível em: https://github.com/falcaopetri/redes/tree/master/projeto2/lab3/conf</p>
 <p>O processo de inicialização dos roteadores com as configurações especificadas pode ser visto no arquivo "util.py" disponível em: https://github.com/falcaopetri/redes/blob/master/projeto2/lab3/util.py</p>
 <p>O processo de configuração e inicialização dos DHCP Servers pode ser visto no arquivo "dhcp.py" disponível em: https://github.com/falcaopetri/redes/blob/master/projeto2/lab3/dhcp.py</p>
 
 
-##Dificuldades Encontradas
+##Dificuldades Encontradas:
 
 <p>As dificuldades encontradas se deram básicamente de maneira incremental a cada laboratório. Sendo as principais dúvidas relacionadas a configuração do roteador por Zebra e BGP e posteriormente a configuração dos DHCP Servers.</p>
 <p>As dúvidas foram sanadas por pesquisas, mas principalmente por um estudo cauteloso dos arquivos disponibilizados no laboratório em sala de aula. Apesar de no laboratório terem um propósito diferente de, no caso, simular ataques, o estudos em cima dos arquivos de configuração nos deram uma ideia clara de como os criar com os parametros que satisfizessem nossa demanda.</p>
 <p>Por fim outra grande dificuldade foi quanto ao comando "pingall". Quando executado o comando não retorna as ligações de imediato, porém se "pingarmos" os links individualmente de maneira manual os links se demonstram efetivos e mais, a posterior execução do comando "pingall" retorna todos os links. Ao procurar o professor para perguntar sobre o tema, obtivemos como resposta que uma possível razão para tal é a falta de excitação necessária na rede. </p>
+<p>No Lab3 não existe o mesmo problema do "pingall". Como temos os clientes fazendo DHCP Requests, acreditamos sejam escitação suficiente da rede. Sendo assim, quando executado o comando já retorna todas as ligações.</p>
+
+##Curiosidades:
+
+<p>Um TODO interessante seria bloquear o acesso de cada DHCP server a partir de outras sub-redeses, uma vez que, por mais que os DHCP Requests atuem somento no domínio de broadcast (que está isolado pelos routers) ainda é possível "pingar" o DHCP Server de outra sub-rede caso se conheça o IP dele.</p>
