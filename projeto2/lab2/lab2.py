@@ -5,51 +5,15 @@ from mininet.net import Mininet
 from mininet.log import lg, info, setLogLevel
 from mininet.util import dumpNodeConnections, quietRun, moveIntf
 from mininet.cli import CLI
-from mininet.node import Switch, OVSKernelSwitch, Node
+from mininet.node import Switch, Node
 
 from subprocess import Popen, PIPE, check_output
 from time import sleep, time
 from multiprocessing import Process
 from argparse import ArgumentParser
 
-import sys
-import os
-import termcolor as T
-import time
-
 import util
-
-
-def log(s, col="green"):
-    print T.colored(s, col)
-
-
-class Router(Switch):
-    """Defines a new router that is inside a network namespace so that the
-    individual routing entries don't collide.
-
-    """
-    ID = 0
-    def __init__(self, name, **kwargs):
-        kwargs['inNamespace'] = True
-        Switch.__init__(self, name, **kwargs)
-        self.controlIntf = Node.defaultIntf(self)
-        Router.ID += 1
-        self.switch_id = Router.ID
-
-    @staticmethod
-    def setup():
-        return
-
-    def start(self, controllers):
-        pass
-
-    def stop(self):
-        self.deleteIntfs()
-
-    def log(self, s, col="magenta"):
-        print T.colored(s, col)
-
+from router import Router
 
 def filter_routers(routers):
     return filter(lambda r : isinstance(r, Router), routers)
@@ -90,13 +54,9 @@ class Lab2Topo(Topo):
         
         # links sw-router
         for idx, sw in enumerate(sws_A):
-            info('connecting ', '%s-eth0' % (sw), 'R1-eth%d' % idx)
-            info('\n')
             self.addLink(sw, R1)
 
         for idx, sw in enumerate(sws_B):
-            info('connecting ', '%s-eth0' % (sw), 'R2-eth%d' % idx)
-            info('\n')
             self.addLink(sw, R2)
 
         # links host-sw
@@ -108,7 +68,7 @@ class Lab2Topo(Topo):
             for host in range(1, 3):
                 self.addLink('h%ds%d' % (host, sub), 'LAN%d' % sub)
 
-        # links router-router
+        # link router-router
         self.addLink(R1, R2)
         
 
@@ -130,37 +90,15 @@ def main():
         host.cmd("route add default gw %s" % (getGateway(host.name)))
 
     # force ping on router -> hosts
+    # nao funciona para pingall, fazer manual ping abaixo
     '''
     for host in net.hosts:
         net.getNodeByName("R1").cmdPrint("ping -c 5 %s" % getIP(host.name).split('/')[0])
         net.getNodeByName("R2").cmdPrint("ping -c 5 %s" % getIP(host.name).split('/')[0])
     '''
-    '''
-    for sub in range(1, 4):
-        for host in range(1, 3):
-            host_name = 'h%ds%d' % (host, sub)
-            info('%s pinging %s' % ('R1', host_name))
-            info('\n')
-            net.getNodeByName('R1').cmd('ping -c 1 %s' % getIP(host_name).split('/')[0])
-
-    for sub in range(8, 10):
-        for host in range(1, 3):
-            host_name = 'h%ds%d' % (host, sub)
-            info('%s pinging %s' % ('R2', host_name))
-            info('\n')
-            net.getNodeByName('R2').cmd('ping -c 1 %s' % getIP(host_name).split('/')[0])
-
-    for host1 in net.hosts:
-        for host2 in net.hosts:
-            if host1 == host2:
-                continue
-            
-            info('%s pinging %s' % (host1, host2))
-            info('\n')
-            host1.cmdPrint('ping -c 1 %s' % getIP(host2.name).split('/')[0])
-    '''
-
-    CLI(net)            
+    
+    CLI(net)
+    
     net.stop()
     util.exit_clean_up()
 
