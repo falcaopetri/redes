@@ -125,7 +125,6 @@ def init_dhcp(servers, clients, sleep_time=7):
     sleep(sleep_time)
     
     for client in clients:
-        sleep(sleep_time/2)
         mountPrivateResolvconf(client)
         startDHCPclient(client)
         waitForIP(client)
